@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="az">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Relax Game Center — Menü</title>
+  <style>
+    :root{
+      --bg: #0f1724;
+      --card: #ffffff;
+      --muted: #94a3b8;
+      --accent1: #7c3aed;
+      --accent2: #06b6d4;
+      --accent3: #f97316;
+      --glass: rgba(255,255,255,0.06);
+      --radius: 14px;
+      --max-w: 980px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    html,body{height:100%;margin:0;padding:28px 16px;background:linear-gradient(180deg,#071025 0%,#071028 40%,#07101a 100%);color:var(--card);display:flex;justify-content:center;}
+    .wrap{width:100%;max-width:var(--max-w);} 
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+    .brand{display:flex;gap:12px;align-items:center;}
+    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;box-shadow:0 6px 18px rgba(12,12,30,0.6);}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+    .controls{display:flex;gap:10px;align-items:center}
+    input.search{background:var(--glass);border:0;padding:10px 12px;border-radius:10px;color:var(--card);outline:none;width:220px}
+    .menu-grid{display:grid;grid-template-columns:1fr 320px;gap:18px}
+    @media (max-width:920px){.menu-grid{grid-template-columns:1fr} .controls input.search{width:140px}}
+    main.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:var(--radius);box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+    .sidebar.card{padding:16px}
+    .categories{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+    .cat{padding:8px 10px;border-radius:999px;background:rgba(255,255,255,0.03);cursor:pointer;font-size:13px}
+    .cat.active{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#07101a;font-weight:700}
+    .section{margin-top:12px}
+    .section h2{font-size:16px;margin:6px 0 12px}
+    .items{display:grid;gap:12px}
+    .item{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:12px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));}
+    .item .left{display:flex;gap:12px;align-items:flex-start}
+    .thumb{width:64px;height:64px;border-radius:10px;flex-shrink:0;background:#0b1220;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--muted)}
+    .meta{line-height:1}
+    .meta h3{margin:0;font-size:15px}
+    .meta p{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .price{font-weight:700;color:var(--accent3)}
+    .badge{display:inline-block;padding:6px 8px;border-radius:8px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#07101a;font-weight:700;font-size:13px}
+    .sidebar .card-section{margin-bottom:12px}
+    .note{font-size:13px;color:var(--muted)}
+    .download-btn{display:block;text-align:center;padding:10px;border-radius:10px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#07101a;font-weight:700;text-decoration:none}
+    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">R</div>
+        <div>
+          <h1>Relax Game Center</h1>
+          <p class="lead">Rəngli, sürətli və mobil üçün optimallaşmış menyu</p>
+        </div>
+      </div>
+      <div class="controls">
+        <input class="search" id="search" placeholder="Axtar... (məsələn: kofe)" />
+      </div>
+    </header>
+
+    <div class="menu-grid">
+      <main class="card">
+        <div class="categories" id="categories"></div>
+        <div id="menuContent"></div>
+        <footer>Relax Game Center — menyu. Masada QR varsa, oxudun və sifariş et!</footer>
+      </main>
+
+      <aside class="sidebar card">
+        <div class="card-section">
+          <div class="badge">Açıq</div>
+          <p class="note" style="margin-top:8px">Ödəniş: Nəğd / Kart (kassa ilə razılaş)</p>
+        </div>
+        <div class="card-section">
+          <h3>Menyu yüklə</h3>
+          <a class="download-btn" id="downloadPdf" href="#">PDF kimi yüklə</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+  // Menü məlumatları: lazım olanda buradan dəyişdir
+  const menuData = [
+    { section: 'İsti içkilər', items: [
+      {name: 'Çay', desc: ' ', price: '2.00 AZN'},
+      {name: 'Südlü Kofe', desc: ' ', price: '0.80 AZN'},
+      {name: 'Acı Kofe', desc: ' ', price: '0.80 AZN'},
+      {name: 'İsti Şokolad', desc: ' ', price: '1.00 AZN'},
+      {name: 'Cappuccino', desc: ' ', price: '1.00 AZN'}
+    ]},
+
+    { section: 'Soyuq içkilər', items: [
+      {name: 'Cola,Fanta,Pepsi,Sprite 0.5 L', desc: ' ', price: '2.00 AZN'},
+      {name: 'Cola,Fanta,Pepsi,Sprite 1.0 L', desc: ' ', price: '3.00 AZN'},
+      {name: 'Cola,Fanta,Pepsi,Sprite 1.5 L', desc: ' ', price: '3.50 AZN'},        
+      {name: 'Cola,Fanta,Pepsi,Sprite 2.0 L', desc: ' ', price: '4.00 AZN'},
+      {name: 'Cappy', desc: ' ', price: '3.50 AZN'},
+      {name: 'Fuse tea', desc: ' ', price: '3.50 AZN'},
+      {name: 'Meyvə şirəsi', desc: ' ', price: '3.50 AZN'},
+      {name: 'Limon Fresh (banka)', desc: ' ', price: '2.00 AZN'},
+      {name: 'Fuse tea (banka)', desc: ' ', price: '2.00 AZN'},
+      {name: 'Bizon (böyük)', desc: ' ', price: '2.00 AZN'},
+      {name: 'Full tea (banka)', desc: ' ', price: '2.00 AZN'},
+      {name: 'Fanta,Cola (banka)', desc: ' ', price: '2.00 AZN'},
+      {name: 'Hell', desc: ' ', price: '2.00 AZN'},
+      {name: 'Bizon balaca qara', desc: ' ', price: '2.00 AZN'},
+      {name: 'Bizon balaca ağ', desc: ' ', price: '2.00 AZN'},
+      {name: 'Bizon balaca', desc: ' ', price: '1.50 AZN'},
+      {name: 'Kofe (banka)', desc: ' ', price: '2.50 AZN'},
+      {name: 'Sarı qız', desc: ' ', price: '1.50 AZN'},
+      {name: 'Çöplü sok', desc: ' ', price: '1.00 AZN'},
+      {name: 'Sirab qazsız 0.5 L', desc: ' ', price: '1.00 AZN'},
+      {name: 'Sirab qazsız 1 L', desc: ' ', price: '2.00 AZN'},
+      {name: 'Sirab qazlı 1 L', desc: ' ', price: '2.00 AZN'},
+      {name: 'Sirab şüşə', desc: ' ', price: '2.00 AZN'},
+      {name: 'Bizon böyük', desc: ' ', price: '2.00 AZN'},
+      {name: 'Cappy', desc: ' ', price: '3.50 AZN'}
+    ]},
+
+    { section: 'Şirniyyatlar', items: [
+      {name: 'Plitka', desc: ' ', price: '5.00 AZN'},
+      {name: 'Snickers (balaca)', desc: ' ', price: '2.50 AZN'},
+      {name: 'Snickers (böyük)', desc: ' ', price: '3.50 AZN'},
+      {name: 'Mars', desc: ' ', price: '2.50 AZN'},
+      {name: 'Rulet', desc: ' ', price: '2.00 AZN'},
+      {name: 'Lətifə (3 ədəd)', desc: ' ', price: '2.00 AZN'},
+      {name: 'Şəkər Parə (4 ədəd)', desc: ' ', price: '2.00 AZN'}
+    ]},
+
+    { section: 'Məzə', items: [
+      {name: 'Cipsi orta', desc: ' ', price: '3.00 AZN'},
+      {name: 'Cipsi böyük', desc: ' ', price: '5.00 AZN'},
+      {name: 'Suxari', desc: ' ', price: '2.00 AZN'},
+      {name: 'Smiçka ağ', desc: ' ', price: '1.50 AZN'},
+      {name: 'Smiçka qara', desc: ' ', price: '1.50 AZN'},
+      {name: 'Smiçka ağ-qara', desc: ' ', price: '2.00 AZN'},
+      {name: 'Fıstıq', desc: ' ', price: '3.00 AZN'},
+      {name: 'Pendir', desc: ' ', price: '3.00 AZN'},
+      {name: 'Pendir limon', desc: ' ', price: '3.50 AZN'},
+      {name: 'Boğaz', desc: ' ', price: '3.00 AZN'},
+      {name: 'Düşbərə', desc: ' ', price: '4.00 AZN'},
+      {name: 'Sosiska', desc: ' ', price: '4.00 AZN'}
+    ]},
+
+    { section: 'Yeməklər', items: [
+      {name: 'Burger', desc: 'Ev üsulu', price: '2.00 AZN'},
+      {name: 'Hot-Dog', desc: ' ', price: '0.60 AZN'},
+      {name: 'Sadə Dönər', desc: '', price: '2.50 AZN'},
+      {name: 'Basdırma Dönər', desc: '', price: '3.00 AZN'},
+      {name: 'Lavaşda Dönər', desc: '', price: '3.00 AZN'},
+      {name: 'Şaurma', desc: '', price: '3.50 AZN'}
+    ]},
+
+    { section: 'Qəlyan', items: [
+      {name: 'Saxsı', desc: '', price: '8.00 AZN'},
+      {name: 'Alma', desc: '', price: '12.00 AZN'},
+      {name: 'Qreyfurt', desc: '', price: '15.00 AZN'}
+    ]}
+  ];
+
+  const categoriesEl = document.getElementById('categories');
+  const menuContent = document.getElementById('menuContent');
+  let activeCat = null;
+
+  function renderCategories(){
+    categoriesEl.innerHTML = '';
+    const all = document.createElement('button');
+    all.className='cat active';
+    all.textContent='Hamısı';
+    all.onclick=()=>{ setActive(null); }
+    categoriesEl.appendChild(all);
+
+    menuData.forEach(m=>{
+      const b=document.createElement('button');
+      b.className='cat';
+      b.textContent=m.section;
+      b.onclick=()=>{ setActive(m.section); }
+      categoriesEl.appendChild(b);
+    });
+    updateActiveStyles();
+  }
+
+  function setActive(section){
+    activeCat=section;
+    updateActiveStyles();
+    renderMenu();
+  }
+
+  function updateActiveStyles(){
+    Array.from(categoriesEl.children).forEach(btn=>{
+      if(activeCat===null && btn.textContent==='Hamısı') btn.classList.add('active');
+      else if(activeCat===btn.textContent) btn.classList.add('active');
+      else btn.classList.remove('active');
+    });
+  }
+
+  function renderMenu(){
+    const q = document.getElementById('search').value.trim().toLowerCase();
+    menuContent.innerHTML='';
+    const sections = menuData.filter(s=> activeCat ? s.section===activeCat : true);
+    sections.forEach(s=>{
+      const sec=document.createElement('section'); sec.className='section';
+      const title=document.createElement('h2'); title.textContent=s.section; sec.appendChild(title);
+      const list=document.createElement('div'); list.className='items';
+
+      s.items.filter(it=>{
+        if(!q) return true;
+        return (it.name+' '+(it.desc||'')).toLowerCase().includes(q);
+      }).forEach(it=>{
+        const itEl=document.createElement('div'); itEl.className='item';
+        const left=document.createElement('div'); left.className='left';
+        const thumb=document.createElement('div'); thumb.className='thumb';
+        thumb.textContent = it.name.split(' ').map(w=>w[0]).slice(0,2).join('');
+        const meta=document.createElement('div'); meta.className='meta';
+        const name=document.createElement('h3'); name.textContent=it.name;
+        const desc=document.createElement('p'); desc.textContent=it.desc||'';
+        meta.appendChild(name); meta.appendChild(desc);
+        left.appendChild(thumb); left.appendChild(meta);
+        const right=document.createElement('div'); right.style.textAlign='right';
+        const price=document.createElement('div'); price.className='price'; price.textContent=it.price;
+        right.appendChild(price);
+        itEl.appendChild(left); itEl.appendChild(right);
+        list.appendChild(itEl);
+      });
+
+      sec.appendChild(list);
+      menuContent.appendChild(sec);
+    });
+  }
+
+  document.getElementById('search').addEventListener('input',()=>{ renderMenu(); });
+  document.getElementById('downloadPdf').addEventListener('click',e=>{ e.preventDefault(); window.print(); });
+
+  renderCategories();
+  renderMenu();
+  </script>
+</body>
+</html>
